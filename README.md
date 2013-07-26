@@ -3,5 +3,5 @@ yesorno
 
 yes or no?
 
-# Documentaion
+# Documentation
 * [API](api.md)
