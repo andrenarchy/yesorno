@@ -11,15 +11,11 @@ define(["jquery", "underscore", "backbone", "jquerymobile"],
         $(document.body).css('visibility','');
       },
       routes: {
-        "": "list",
-        "list": "list",
-        "show/:id": "show"
+        "": "home",
+        "home": "home"
       },
-      list: function() {
-        this.changePage("#list");
-      },
-      show: function(id) {
-        this.changePage('#show')
+      home: function() {
+        this.changePage("#home");
       },
       changePage: function(pageid) {
         console.log('change to page '+pageid);
