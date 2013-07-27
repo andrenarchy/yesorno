@@ -5,6 +5,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     Backbone.couch_connector.config.base_url = 'http://yesorno.iriscouch.com';
     Backbone.couch_connector.config.db_name = 'yesorno';
     Backbone.couch_connector.config.ddoc_name = 'yesorno-api';
+    Backbone.couch_connector.config.global_changes = true;
 
     var MnemeRouter = Backbone.Router.extend({
       initialize: function() {
@@ -54,7 +55,8 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       initialize: function(id) {
         this.db = {
           view: 'by_id',
-          keys: [id]
+          keys: [id],
+          filter : Backbone.couch_connector.config.ddoc_name + "/by_id"
         };
         Backbone.Collection.prototype.initialize.call(this, arguments);
       }
