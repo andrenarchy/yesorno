@@ -9,9 +9,9 @@
     <script data-main="scripts/require_init" src="scripts/require.js"></script>
   </head>
   <body style="visibility: hidden">
-    <div id="home" data-role="page">
-			<h1 class="question">¢ Ist Emma da?</h1>
-			<p class="answer">Ja</p> 
-    </div>
+    <script type="text/template" id="template_YesornoPage">
+      <h1 class="question"><%=question%></h1>
+      <p class="answer"><%=answer%></p>
+    </script>
   </body>
 </html>
