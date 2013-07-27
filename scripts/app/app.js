@@ -6,8 +6,6 @@ define(["jquery", "underscore", "backbone", "jquerymobile"],
       initialize: function() {
         this.firstPage = true;
         $.mobile.initializePage();
-        // display page when JQM finished its magic.
-        $(document.body).css('visibility','');
       },
       routes: {
         "": "home",
