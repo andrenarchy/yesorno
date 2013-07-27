@@ -2,6 +2,10 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
   function($, _, Backbone, BackboneCouch, Mobile) {
     console.log("app running!");
 
+    Backbone.couch_connector.config.base_url = 'http://yesorno.iriscouch.com';
+    Backbone.couch_connector.config.db_name = 'yesorno';
+    Backbone.couch_connector.config.ddoc_name = 'yesorno-api';
+
     var MnemeRouter = Backbone.Router.extend({
       initialize: function() {
         this.firstPage = true;
@@ -47,10 +51,10 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     // want to handle one Model at a time but the Backbone-couchdb
     // connector is based on collections :/
     var YesornoCollection = Backbone.Collection.extend({
-      initialize: function() {
-        this.url = '/' + id;
+      initialize: function(id) {
         this.db = {
-          view: 'by_id'
+          view: 'by_id',
+          keys: [id]
         };
         Backbone.Collection.prototype.initialize.call(this, arguments);
       }
@@ -69,7 +73,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       }
     });
 
-    this.router = new MnemeRouter();
+    var router = new MnemeRouter();
 
     function showYesornoPage(id) {
       // TODO retrieve the actual yesorno doc here instead of creating a
@@ -80,13 +84,18 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         answer: 'Noooain!'
       });
 
-      // change page to fresh view associated with model 'yesorno'
-      this.router.changePage(
-        new YesornoView({
-          model: yesorno,
-          el: $('<div></div>')
-        })
-      );
+      var coll = new YesornoCollection('istemmaschonda');
+      coll.on('add', function(model) {
+        // change page to fresh view associated with model 'yesorno'
+        router.changePage(
+          new YesornoView({
+            model: model,
+            el: $('<div></div>')
+          })
+        );
+      });
+      coll.fetch();
+
     }
 
     Backbone.history.start();
