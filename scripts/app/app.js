@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "jquerymobile"],
-  function($, _, Backbone, Mobile) {
+define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
+  function($, _, Backbone, BackboneCouch, Mobile) {
     console.log("app running!");
 
     var MnemeRouter = Backbone.Router.extend({
@@ -40,6 +40,19 @@ define(["jquery", "underscore", "backbone", "jquerymobile"],
           return 'Model must have a question';
         }
         // TODO
+      }
+    });
+
+    // dummy collection: we don't actually need it because we only
+    // want to handle one Model at a time but the Backbone-couchdb
+    // connector is based on collections :/
+    var YesornoCollection = Backbone.Collection.extend({
+      initialize: function() {
+        this.url = '/' + id;
+        this.db = {
+          view: 'by_id'
+        };
+        Backbone.Collection.prototype.initialize.call(this, arguments);
       }
     });
 
