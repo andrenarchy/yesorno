@@ -25,6 +25,18 @@ define(["jquery", "underscore", "backbone", "jquerymobile"],
       }
     });
 
+    var Yesorno = Backbone.model.extend({
+
+      // validate() should check the same fields as validate_doc_update()
+      // in the CouchDB design document
+      validate: function(attributes) {
+        if (!attributes['question']) {
+          return 'Model must have a question';
+        }
+        // TODO
+      }
+    });
+
     this.router = new MnemeRouter();
   }
 );
