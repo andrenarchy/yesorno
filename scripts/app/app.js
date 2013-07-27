@@ -46,6 +46,12 @@ define(["jquery", "underscore", "backbone", "jquerymobile"],
     });
 
     var YesornoView = Backbone.View.extend({
+      initialize: function() {
+        this.listenTo(this.model, {
+          'change': this.render,
+          'destroy': this.remove
+        });
+      },
       template: _.template( $("#template_YesornoPage").html() ),
       render: function() {
         $(this.el).html( this.template( this.model.toJSON() ) );
@@ -57,7 +63,8 @@ define(["jquery", "underscore", "backbone", "jquerymobile"],
     function showYesornoPage(id) {
       // TODO retrieve the actual yesorno doc here instead of creating a
       // fixed one.
-      var yesorno = new Yesorno({
+      // TODO add 'var' once we leave debugging phase ;)
+      yesorno = new Yesorno({
         question: 'Ist Emma schon da?',
         answer: 'Noooain!'
       });
