@@ -9,7 +9,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 
     var MnemeRouter = Backbone.Router.extend({
       initialize: function() {
-        this.firstPage = true;
+        this.firstPage = false;
         $.mobile.initializePage();
       },
       routes: {
@@ -96,8 +96,13 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           })
         );
       });
-      coll.fetch();
+      // show a fancy 'loading' message while fetching data
+      $.mobile.loading( 'show', {
+        textVisible: true
+      });
 
+      // go for the data
+      coll.fetch();
     }
 
     Backbone.history.start();
