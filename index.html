@@ -9,8 +9,14 @@
     <script data-main="scripts/require_init" src="scripts/require.js"></script>
     <!-- TODO: move templates into separate file (?) -->
     <script type="text/template" id="template_YesornoPage">
-      <h1 class="question"><%=question%></h1>
-      <p class="answer"><%=answer%></p>
+      <div class="yon_container">
+        <h1 class="yon_question"><%=question%></h1>
+        <% if (answer==true) { %>
+          <p class="yon_answer"><%=answer_true%></p>
+        <% } else { %>
+          <p class="yon_answer"><%=answer_false%></p>
+        <% } %>
+      </div>
     </script>
   </head>
   <body>
