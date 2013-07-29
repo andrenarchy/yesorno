@@ -1,6 +1,26 @@
-.yon_question{
-	text-align: center;
+@charset "UTF-8";
+
+div[data-role="page"] {
+  background-image:url(http://yesorno.iriscouch.com/yesorno/istemmaschonda/emma.jpg);
+  background-size:cover;
+  background-repeat:no-repeat;
+  color:white;
+  font-family: 'Verdana';
+  margin:0px;
+  padding:0px;
+}
+
+.yon_question, .yon_answer{
+	margin-top: 70px;
+  background-color: #000014;
+  text-align: right;
+  opacity: 0.65; 
+  color: white;
+  font-size: 50px;
+  padding-left:5%;
+  padding-right:5%;
+  margin-left:40%;
 }
 .yon_answer{
-	text-align: center;
+  margin-left:70%;
 }
