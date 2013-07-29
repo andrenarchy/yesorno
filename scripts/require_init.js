@@ -6,6 +6,7 @@ requirejs.config({
     backbonecouch: "libs/backbone-couchdb",
     jquery: "libs/jquery-1.10.2.min",
     jquerycouch: "libs/jquery.couch",
+    jquerycouchlogin: "app/jquery.couchLogin",
     jquerymobile: "libs/jquery.mobile-1.3.2.min",
     jquerymobileconfig: "app/jquerymobileconfig",
     underscore: "libs/underscore-min",
@@ -25,6 +26,10 @@ requirejs.config({
     jquerycouch: {
       deps: ["jquery"],
       exports: "$.couch"
+    },
+    jquerycouchlogin: {
+      deps: ["jquerycouch"],
+      exports: "$.couchLogin"
     },
     jquerymobileconfig: ["jquery"],
     jquerymobile: ["jquery", "jquerymobileconfig"],

@@ -10,6 +10,7 @@
     <!-- TODO: move templates into separate file (?) -->
     <script type="text/template" id="template_YesornoPage">
       <div class="yon_container">
+        <!--div class="yon_login" id="logindiv">Login</div-->
         <h1 class="yon_question"><%=question%></h1>
         <% if (answer==true) { %>
           <p class="yon_answer"><%=answer_true%></p>
@@ -20,5 +21,6 @@
     </script>
   </head>
   <body>
+    <div data-role="page" id="empty"></div>
   </body>
 </html>

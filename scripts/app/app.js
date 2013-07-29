@@ -1,11 +1,16 @@
-define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
-  function($, _, Backbone, BackboneCouch, Mobile) {
+define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin", "jquerymobile"],
+  function($, _, Backbone, BackboneCouch, jquerycouchlogin, Mobile) {
     console.log("app running!");
 
-    Backbone.couch_connector.config.base_url = 'http://yesorno.iriscouch.com';
-    Backbone.couch_connector.config.db_name = 'yesorno';
+    var couchDbServer = 'http://yesorno.iriscouch.com';
+    var couchDbName = 'yesorno';
+
+    Backbone.couch_connector.config.base_url = couchDbServer;
+    Backbone.couch_connector.config.db_name = couchDbName;
     Backbone.couch_connector.config.ddoc_name = 'yesorno-api';
     Backbone.couch_connector.config.global_changes = true;
+
+    $.couch.urlPrefix = couchDbServer;
 
     var MnemeRouter = Backbone.Router.extend({
       initialize: function() {
@@ -13,9 +18,10 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         $.mobile.initializePage();
       },
       routes: {
-        "": "home",
+        "": showHomePage,
+        ":id": showYesornoPage
       },
-      home: function() {
+      home: function(id) {
         // TODO: get actual initial ID from domain
         // (e.g. istemmaschonda.yesorno.it)
         var id = 'istemmaschonda';
@@ -29,10 +35,13 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         $(page.el).attr('data-role', 'page');
         page.render();
         $('body').append($(page.el));
+        $(page.el).trigger('create');
 
         // make transition / actually change page
         var transition = this.firstPage ? "none" : $.mobile.defaultPageTransition;
         this.firstPage = false;
+        console.log($(page.el))
+        $.mobile.initializePage();
         $.mobile.changePage($(page.el), { transition: transition, changeHash: false });
       }
     });
@@ -66,43 +75,71 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       initialize: function() {
         this.listenTo(this.model, {
           'change': this.render,
-          'destroy': this.remove
+          //'destroy': this.remove
         });
       },
       template: _.template( $("#template_YesornoPage").html() ),
       render: function() {
         $(this.el).html( this.template( this.model.toJSON() ) );
+        //$(this.el).find('#logindiv').couchLogin();
       }
     });
 
     var router = new MnemeRouter();
 
-    function showYesornoPage(id) {
-      // TODO retrieve the actual yesorno doc here instead of creating a
-      // fixed one.
-      // TODO add 'var' once we leave debugging phase ;)
-      yesorno = new Yesorno({
-        question: 'Ist Emma schon da?',
-        answer: 'Noooain!'
-      });
+    function showHomePage() {
+      showYesornoPage('istemmaschonda');
+    }
 
-      var coll = new YesornoCollection('istemmaschonda');
-      coll.on('add', function(model) {
-        // change page to fresh view associated with model 'yesorno'
-        router.changePage(
-          new YesornoView({
-            model: model,
-            el: $('<div></div>')
-          })
-        );
-      });
+    function showLoading(id) {
       // show a fancy 'loading' message while fetching data
       $.mobile.loading( 'show', {
+        text: 'Fetching '+id+'...',
         textVisible: true
       });
+    }
+
+    function showNoDoc(id){
+      // show a fancy 'loading' message while fetching data
+      $.mobile.loading( 'show', {
+        text: 'No '+id+' document. Waiting for it...',
+        textVisible: true
+      });
+    }
+
+    function showYesornoPage(id) {
+      var coll = new YesornoCollection(id);
+      coll.on('add', function(model) {
+        console.log('collection add event');
+        console.log(model);
+        // change page to fresh view associated with model 'yesorno'
+        var yesorno_view = new YesornoView({
+          model: model,
+          el: $('<div></div>')
+        });
+        coll.on('remove', function() {
+          console.log('collection remove event');
+          var empty=$('<div data-role="page"></div>');
+          $('body').append(empty);
+          $.mobile.changePage(empty, { transition: 'fade', changeHash: false });
+          showNoDoc(id);
+
+          console.log('change to ', empty);
+          //yesorno_view.remove();
+        });
+        router.changePage(yesorno_view);
+
+      });
+      showLoading(id);
 
       // go for the data
-      coll.fetch();
+      coll.fetch({
+        success: function() {
+          if (!coll.length) {
+            showNoDoc(id);
+          }
+        }
+      });
     }
 
     Backbone.history.start();
