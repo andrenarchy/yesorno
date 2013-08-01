@@ -1,0 +1,10 @@
+[
+  ".*\\.swp$",
+  "maintenance",
+  "sample_docs",
+  "README.md",
+  "TODO",
+  "API",
+  "api.md",
+  ".couchappignore"
+]
