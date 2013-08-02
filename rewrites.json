@@ -1,0 +1,18 @@
+[
+  {
+    "from": "",
+    "to": "index.html"
+  },
+  {
+    "from": "api/",
+    "to": "../../_design/yesorno-api/"
+  },
+  {
+    "from": "api/*",
+    "to": "../../_design/yesorno-api/*"
+  },
+  {
+    "from": "*",
+    "to": "*"
+  }
+]
