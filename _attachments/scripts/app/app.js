@@ -2,7 +2,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
   function($, _, Backbone, BackboneCouch, jquerycouchlogin, Mobile) {
     console.log("app running!");
 
-    var couchDbServer = 'http://yesorno.iriscouch.com';
+    var couchDbServer = 'http://yesorno.it';
     var couchDbName = 'yesorno';
 
     Backbone.couch_connector.config.base_url = couchDbServer;
