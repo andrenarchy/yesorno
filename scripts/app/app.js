@@ -80,9 +80,39 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
       },
       template: _.template( $("#template_YesornoPage").html() ),
       render: function() {
-        $(this.el).html( this.template( this.model.toJSON() ) );
+        this.$el.html( this.template( this.model.toJSON() ) );
+				this.input = this.$('.edit');
+				return this;
         //$(this.el).find('#logindiv').couchLogin();
-      }
+      },
+
+		  // change data on double click
+		events: {
+        'dblclick h1.yon_question' : 'edit',
+        'keypress .edit' : 'updateOnEnter',
+        'blur .edit' : 'close'
+			},
+
+      edit: function(){
+				console.log("double click, wa?")
+        this.$el.addClass('editing');
+        this.input.focus();
+      },
+
+      close: function(){
+        var value = this.input.val().trim();
+        if(value) {
+          this.model.save({question: value});
+        }
+        this.$el.removeClass('editing');
+      },
+
+      updateOnEnter: function(e){
+        if(e.which == 13){
+          this.close();
+        }
+       }
+	
     });
 
     var router = new MnemeRouter();

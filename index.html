@@ -6,13 +6,31 @@
 		<meta charset="utf-8">
     <link rel="stylesheet" href="css/libs/jquery.mobile-1.3.2.min.css">
     <link rel="stylesheet" href="css/yesorno.css">
+
+		<!-- ========= -->
+		<!--    CSS    -->
+		<!-- ========= -->
+		<style type="text/css">
+			/* #yon_cont input.edit { */
+				/* display: none; Hides input box*/
+			/* } */
+			
+			#yon_cont .editing h1.yon_question {
+				display: none; /* Hides question text when .editing*/
+			}
+			#yon_cont .editing input.edit {
+				display: inline; /* Shows input text box when .editing*/
+			}
+		</style>  
+
     <script data-main="scripts/require_init" src="scripts/require.js"></script>
     <!-- TODO: move templates into separate file (?) -->
     <script type="text/template" id="template_YesornoPage">
-      <div class="yon_container">
+			<div class="yon_container" id="yon_cont">
         <!--div class="yon_login" id="logindiv">Login</div-->
         <h1 class="yon_question"><%=question%></h1>
 				<input class="edit" value="<%-question%>">
+
         <% if (answer==true) { %>
           <h1 class="yon_answer"><%=answer_true%></h1>
         <% } else { %>
