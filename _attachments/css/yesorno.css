@@ -11,7 +11,7 @@ div[data-role="page"] {
 }
 
 .yon_question, .yon_answer{
-	margin-top: 70px;
+  margin-top: 70px;
   background-color: #000014;
   text-align: right;
   opacity: 0.65; 
@@ -21,6 +21,11 @@ div[data-role="page"] {
   padding-right:5%;
   margin-left:40%;
 }
+
 .yon_answer{
   margin-left:70%;
+}
+
+.yon_lastchange {
+  text-align: right;
 }
