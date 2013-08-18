@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 div[data-role="page"] {
-  background-image:url(http://yesorno.it/yesorno/istemmaschonda/emma.jpg);
+  background-image:url(/yesorno/_design/yesorno-html5/images/defaultbg.jpg);
   background-size:cover;
   background-repeat:no-repeat;
   color:white;

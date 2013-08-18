@@ -81,6 +81,26 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
       template: _.template( $("#template_YesornoPage").html() ),
       render: function() {
         $(this.el).html( this.template( this.model.toJSON() ) );
+
+        var att = this.model.get('_attachments');
+        function get_fname(name) {
+          var extensions = ['png', 'jpg'];
+          if (!att) {
+            return null;
+          }
+          for (var i=0, ext; ext=extensions[i++];) {
+            var fname = name + '.' + ext;
+            if (fname in att && att[fname].length<1e6) {
+              return fname;
+            }
+          }
+          return null;
+        }
+
+        var bgimage_fname = get_fname(this.model.get('answer') ? 'true' : 'false');
+        if (bgimage_fname) {
+          $(this.el).first().css('background-image', 'url(/yesorno/'+this.model.get('_id')+'/'+bgimage_fname+')');
+        }
         //$(this.el).find('#logindiv').couchLogin();
       }
     });
