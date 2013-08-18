@@ -61,14 +61,19 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
       logout: function() {
         $.couch.logout({success: this.session_update.bind(this)});
       },
-      signup: function(name, mail, pass) {
+      register: function(name, mail, pass, success, error) {
         $.couch.signup({
             name: name,
             mail: mail
           }, pass, {
             success: function() {
+              this.session_update();
+              if (success) { success(); }
               this.login(name, pass);
-            }.bind(this)
+            }.bind(this),
+            error: function(stat, err, reas) {
+              if (error) { error(stat, err, reas); }
+            }
           });
       },
       session_update: function() {
@@ -103,7 +108,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
       render: function() {
         var name = this.model.get('name');
         if (name) {
-          $(this.el).html(this.template_loggedin(this.model.toJSON));
+          $(this.el).html(this.template_loggedin(this.model.toJSON()));
           $(this.el).find('#btn_logout').on('click', function() {
             $(this.el).find('#btn_logout').button('disable');
             this.model.logout();
@@ -112,13 +117,16 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
         } else {
           $(this.el).html(this.template_loggedout);
           var popup_login = $(this.el).find('#popup_login');
+          var popup_register = $(this.el).find('#popup_register');
           $(this.el).trigger('create');
+
+          // prepare login popup
           popup_login.find('form').submit(false);
           popup_login.find('input[type=submit]').on('click', function() {
             var name = popup_login.find('input[name=name]').val(),
                 pass = popup_login.find('input[name=pass]').val();
             popup_login.find('input[type=submit]').button('disable');
-            popup_login.find('#status').removeClass('error').html('logging in...');
+            popup_login.find('#status').removeClass('error').html('Logging in...');
             this.model.login(name, pass, function() {
                 popup_login.popup('close');
               },
@@ -130,6 +138,27 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
           }.bind(this));
           $(this.el).find('#btn_login').on('click', function() {
             popup_login.popup('open', {positionTo: 'window', transition: 'fade'});
+          }.bind(this));
+
+          // prepare register popup
+          popup_register.find('form').submit(false);
+          popup_register.find('input[type=submit]').on('click', function() {
+            var name = popup_register.find('input[name=name]').val(),
+                mail = popup_register.find('input[name=mail]').val(),
+                pass = popup_register.find('input[name=pass]').val();
+            popup_register.find('input[type=submit]').button('disable');
+            popup_register.find('#status').removeClass('error').html('Registering...');
+            this.model.register(name, mail, pass, function() {
+                popup_register.popup('close');
+              },
+              function(stat, err, reason) {
+                popup_register.find('#status').addClass('error').html(reason);
+                popup_register.find('input[type=submit]').button('enable');
+              }
+            );
+          }.bind(this));
+          $(this.el).find('#btn_register').on('click', function() {
+            popup_register.popup('open', {positionTo: 'window', transition: 'fade'});
           }.bind(this));
         }
       }

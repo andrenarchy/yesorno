@@ -32,18 +32,18 @@ div[data-role="page"] {
   margin-left: 70%;
 }
 
-#popup_login {
+#popup_login, #popup_register {
   opacity: 0.93;
   background: #eeeeee;
+}
+
+#popup_login form, #popup_register form {
+  padding: 20px;
 }
 
 .error {
   color: red;
   font-weight: bold;
-}
-
-#popup_login form {
-  padding: 20px;
 }
 
 .yon_lastchange {
