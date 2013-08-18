@@ -126,6 +126,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
             var name = popup_login.find('input[name=name]').val(),
                 pass = popup_login.find('input[name=pass]').val();
             popup_login.find('input[type=submit]').button('disable');
+            popup_login.popup({dismissible: false});
             popup_login.find('#status').removeClass('error').html('Logging in...');
             this.model.login(name, pass, function() {
                 popup_login.popup('close');
@@ -133,6 +134,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
               function(stat, err, reason) {
                 popup_login.find('#status').addClass('error').html(reason);
                 popup_login.find('input[type=submit]').button('enable');
+                popup_login.popup({dismissible: true});
               }
             );
           }.bind(this));
@@ -147,6 +149,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
                 mail = popup_register.find('input[name=mail]').val(),
                 pass = popup_register.find('input[name=pass]').val();
             popup_register.find('input[type=submit]').button('disable');
+            popup_register.popup({dismissible: false});
             popup_register.find('#status').removeClass('error').html('Registering...');
             this.model.register(name, mail, pass, function() {
                 popup_register.popup('close');
@@ -154,6 +157,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
               function(stat, err, reason) {
                 popup_register.find('#status').addClass('error').html(reason);
                 popup_register.find('input[type=submit]').button('enable');
+                popup_register.popup({dismissible: true});
               }
             );
           }.bind(this));
