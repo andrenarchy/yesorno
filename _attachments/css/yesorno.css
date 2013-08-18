@@ -10,6 +10,12 @@ div[data-role="page"] {
   padding:0px;
 }
 
+.yon_loggedin, .yon_loggedout {
+  padding-right: 5%;
+  padding-left: 5%;
+  text-align: right;
+}
+
 .yon_question, .yon_answer{
   margin-top: 70px;
   background-color: #000014;
@@ -23,7 +29,21 @@ div[data-role="page"] {
 }
 
 .yon_answer{
-  margin-left:70%;
+  margin-left: 70%;
+}
+
+#popup_login {
+  opacity: 0.93;
+  background: #eeeeee;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+#popup_login form {
+  padding: 20px;
 }
 
 .yon_lastchange {

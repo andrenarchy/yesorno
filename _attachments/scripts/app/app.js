@@ -38,6 +38,103 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
       }
     });
 
+    var CouchUser = Backbone.Model.extend({
+      initialize: function() {
+        console.log('bla')
+        this.set('name', null);
+        this.set('mail', null);
+        this.session_update();
+      },
+      login: function(name, pass, success, error) {
+        $.couch.login({
+            name: name,
+            password: pass,
+            success: function() {
+              this.session_update();
+              if (success) { success(); }
+            }.bind(this),
+            error: function(stat, err, reas) {
+              if (error) { error(stat, err, reas); }
+            }
+          });
+      },
+      logout: function() {
+        $.couch.logout({success: this.session_update.bind(this)});
+      },
+      signup: function(name, mail, pass) {
+        $.couch.signup({
+            name: name,
+            mail: mail
+          }, pass, {
+            success: function() {
+              this.login(name, pass);
+            }.bind(this)
+          });
+      },
+      session_update: function() {
+        $.couch.session({ success: function(r) {
+          var userCtx = r.userCtx;
+          if (userCtx.name) {
+            this.set('name', userCtx.name);
+            this.set('mail', userCtx.mail);
+            this.trigger('loggedin');
+          } else {
+            this.set('name', null);
+            this.set('mail', null);
+            this.trigger('loggedout')
+          }
+        }.bind(this) });
+      }
+    });
+
+    // there'll only be one user model!
+    var user = new CouchUser();
+
+    var CouchUserView = Backbone.View.extend({
+      initialize: function() {
+        this.listenTo(this.model, {
+          'loggedin': this.render,
+          'loggedout': this.render
+        });
+        this.render();
+      },
+      template_loggedin: _.template($('#template_loggedin').html()),
+      template_loggedout: $('#template_loggedout').html(),
+      render: function() {
+        var name = this.model.get('name');
+        if (name) {
+          $(this.el).html(this.template_loggedin(this.model.toJSON));
+          $(this.el).find('#btn_logout').on('click', function() {
+            $(this.el).find('#btn_logout').button('disable');
+            this.model.logout();
+          }.bind(this));
+          $(this.el).trigger('create');
+        } else {
+          $(this.el).html(this.template_loggedout);
+          var popup_login = $(this.el).find('#popup_login');
+          $(this.el).trigger('create');
+          popup_login.find('form').submit(false);
+          popup_login.find('input[type=submit]').on('click', function() {
+            var name = popup_login.find('input[name=name]').val(),
+                pass = popup_login.find('input[name=pass]').val();
+            popup_login.find('input[type=submit]').button('disable');
+            popup_login.find('#status').removeClass('error').html('logging in...');
+            this.model.login(name, pass, function() {
+                popup_login.popup('close');
+              },
+              function(stat, err, reason) {
+                popup_login.find('#status').addClass('error').html(reason);
+                popup_login.find('input[type=submit]').button('enable');
+              }
+            );
+          }.bind(this));
+          $(this.el).find('#btn_login').on('click', function() {
+            popup_login.popup('open', {positionTo: 'window', transition: 'fade'});
+          }.bind(this));
+        }
+      }
+    });
+
     var Yesorno = Backbone.Model.extend({
       // validate() should check the same fields as validate_doc_update()
       // in the CouchDB design document
@@ -93,7 +190,12 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
         if (bgimage_fname) {
           $(this.el).first().css('background-image', 'url(/yesorno/'+this.model.get('_id')+'/'+bgimage_fname+')');
         }
-        //$(this.el).find('#logindiv').couchLogin();
+
+        var userviewdiv = $('<div></div>').prependTo($(this.el));
+        var userview = new CouchUserView({
+          model: user,
+          el: userviewdiv
+        });
       }
     });
 

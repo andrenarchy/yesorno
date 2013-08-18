@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/libs/jquery.mobile-1.3.2.min.css">
     <link rel="stylesheet" href="css/yesorno.css">
     <script data-main="scripts/require_init" src="scripts/require.js"></script>
+
     <!-- TODO: move templates into separate file (?) -->
     <script type="text/template" id="template_YesornoPage">
       <div class="yon_container">
@@ -20,6 +21,56 @@
         <div class="yon_lastchange">Last changed: <%=mtime%></div>
       </div>
     </script>
+
+    <script type="text/template" id="template_loggedin">
+      <div class="yon_loggedin">
+        <button id="btn_logout" data-icon="arrow-r" data-theme="b" data-inline="true">Logout</button>
+      </div>
+    </script>
+
+    <script type="text/template" id="template_loggedout">
+      <div class="yon_loggedout">
+        <button id="btn_login" data-icon="arrow-r" data-theme="b" data-inline="true">Login</button>
+        <button id="btn_register" data-icon="edit" data-theme="e" data-inline="true">Register</button>
+      </div>
+      <div id="popup_login" data-role="popup" data-overlay-theme="a">
+        <form autocomplete="on">
+          <div data-role="fieldcontain" class="ui-hide-label">
+            <input type="text" name="name" value="" placeholder="Username">
+          </div>
+          <div data-role="fieldcontain" class="ui-hide-label">
+            <input type="password" name="pass" value="" placeholder="Password">
+          </div>
+          <p>
+            <input type="submit" value="Login" data-icon="arrow-r" data-theme="b">
+            <!--a href="#">Passwort vergessen?</a-->
+          </p>
+          <p id="status"></p>
+        </form>
+      </div>
+      <div id="popup_register" data-role="popup" data-overlay-theme="a">
+        <form autocomplete="on">
+          <div data-role="fieldcontain" class="ui-hide-label">
+            <input type="text" name="name" value="" placeholder="Username">
+          </div>
+          <div data-role="fieldcontain" class="ui-hide-label">
+            <input type="text" name="mail" value="" placeholder="e-mail">
+          </div>
+          <div data-role="fieldcontain" class="ui-hide-label">
+            <input type="password" name="pass" id="pass" value="" placeholder="Password">
+          </div>
+          <p>
+            <input type="submit" value="Login" data-icon="arrow-r" data-theme="b">
+            <!--a href="#">Passwort vergessen?</a-->
+          </p>
+          <p id="status"></p>
+        </form>
+      </div>
+    </script>
+
+    <script type="text/template" id="template_popup_login">
+    </script>
+
   </head>
   <body>
     <div data-role="page" id="empty"></div>
