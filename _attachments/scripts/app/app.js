@@ -21,13 +21,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
         "": showHomePage,
         ":id": showYesornoPage
       },
-      home: function(id) {
-        // TODO: get actual initial ID from domain
-        // (e.g. istemmaschonda.yesorno.it)
-        var id = 'istemmaschonda';
-
-        showYesornoPage(id);
-      },
       changePage: function(page) {
         console.log('change page');
 
@@ -40,7 +33,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
         // make transition / actually change page
         var transition = this.firstPage ? "none" : $.mobile.defaultPageTransition;
         this.firstPage = false;
-        console.log($(page.el))
         $.mobile.initializePage();
         $.mobile.changePage($(page.el), { transition: transition, changeHash: false });
       }
@@ -131,7 +123,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin",
       var coll = new YesornoCollection(id);
       coll.on('add', function(model) {
         console.log('collection add event');
-        console.log(model);
         // change page to fresh view associated with model 'yesorno'
         var yesorno_view = new YesornoView({
           model: model,
