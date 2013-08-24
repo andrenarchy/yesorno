@@ -20,7 +20,7 @@ div[data-role="page"] {
   margin-top: 70px;
   background-color: #000014;
   text-align: right;
-  opacity: 0.65; 
+  opacity: 0.65;
   color: white;
   font-size: 50px;
   padding-left:5%;
@@ -28,13 +28,36 @@ div[data-role="page"] {
   margin-left:40%;
 }
 
-.yon_answer{
+.yon_box {
+  margin-top: 70px;
+  background-color: #000014;
+  text-align: right;
+  opacity: 0.65;
+  color: white;
+  padding-left:5%;
+  padding-right:5%;
+  margin-left:40%;
+}
+
+h1 {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.yon_box_small {
   margin-left: 70%;
 }
 
-.yon_answer .ui-radio {
-  width: 100px;
+.yon_left {
   float: left;
+}
+
+.yon_answer_edit .yon_box_small {
+  padding-left: 0.2em;
+}
+
+.yon_answer{
+  margin-left: 70%;
 }
 
 #popup_login, #popup_register {

@@ -24,18 +24,16 @@
     <script type="text/template" id="template_edit">
       <div class="yon_container">
         <h1 class="yon_question"><%=question%></h1>
-        <form>
-          <h1 class="yon_answer">
-            <input type="radio" name="answer" id="answer_true">
-            <label for="answer_true">yes</label>
-            <%=answer_true%> 
-          </h1>
-          <h1 class="yon_answer">
-            <input type="radio" name="answer" id="answer_false">
-            <label for="answer_false">no</label>
-            <%=answer_false%> 
-          </h1>
-        </form>
+        <div class="yon_answer_edit">
+          <div class="yon_box yon_box_small">
+            <a href="#" data-role="button" data-inline="true" class="yon_left">Yes</a>
+            <h1><%=answer_true%></h1>
+          </div>
+          <div class="yon_box yon_box_small">
+            <a href="#" data-role="button" data-inline="true" data-icon="check" data-theme="b" class="yon_left">No</a>
+            <h1><%=answer_false%></h1>
+          </div>
+        </div>
       </div>
     </script>
 
