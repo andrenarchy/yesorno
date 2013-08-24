@@ -40,7 +40,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 
     var CouchUser = Backbone.Model.extend({
       initialize: function() {
-        console.log('bla')
         this.set('name', null);
         this.set('mail', null);
         this.session_update();
