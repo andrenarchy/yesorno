@@ -9,9 +9,8 @@
     <script data-main="scripts/require_init" src="scripts/require.js"></script>
 
     <!-- TODO: move templates into separate file (?) -->
-    <script type="text/template" id="template_YesornoPage">
+    <script type="text/template" id="template_view">
       <div class="yon_container">
-        <!--div class="yon_login" id="logindiv">Login</div-->
         <h1 class="yon_question"><%=question%></h1>
         <% if (answer==true) { %>
           <h1 class="yon_answer"><%=answer_true%></h1>
@@ -19,6 +18,12 @@
           <h1 class="yon_answer"><%=answer_false%></h1>
         <% } %>
         <div class="yon_lastchange">Last changed: <%=mtime%></div>
+      </div>
+    </script>
+
+    <script type="text/template" id="template_edit">
+      <div class="yon_container">
+        <h1 class="yon_question"><%=question%></h1>
       </div>
     </script>
 

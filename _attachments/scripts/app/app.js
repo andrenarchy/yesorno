@@ -199,9 +199,14 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           //'destroy': this.remove
         });
       },
-      template: _.template( $("#template_YesornoPage").html() ),
+      template_view: _.template( $("#template_view").html() ),
+      template_edit: _.template( $("#template_edit").html() ),
       render: function() {
-        $(this.el).html( this.template( this.model.toJSON() ) );
+        var template = this.template_view;
+        if (user.get('name')==this.model.get('user')) {
+          template = this.template_edit;
+        }
+        $(this.el).html( template( this.model.toJSON() ) );
 
         var att = this.model.get('_attachments');
         function get_fname(name) {
