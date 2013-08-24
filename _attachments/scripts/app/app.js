@@ -1,5 +1,5 @@
-define(["jquery", "underscore", "backbone", "backbonecouch", "jquerycouchlogin", "jquerymobile"],
-  function($, _, Backbone, BackboneCouch, jquerycouchlogin, Mobile) {
+define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
+  function($, _, Backbone, BackboneCouch, Mobile) {
     console.log("app running!");
 
     var couchDbServer = 'http://yesorno.it';
