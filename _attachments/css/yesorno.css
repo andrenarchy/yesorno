@@ -32,6 +32,11 @@ div[data-role="page"] {
   margin-left: 70%;
 }
 
+.yon_answer .ui-radio {
+  width: 100px;
+  float: left;
+}
+
 #popup_login, #popup_register {
   opacity: 0.93;
   background: #eeeeee;
