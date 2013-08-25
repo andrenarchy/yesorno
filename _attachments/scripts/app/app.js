@@ -81,11 +81,12 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           if (userCtx.name) {
             this.set('name', userCtx.name);
             this.set('mail', userCtx.mail);
-            this.trigger('loggedin');
+            this.trigger('loggedin', userCtx.name);
           } else {
+            var name = this.get('name');
             this.set('name', null);
             this.set('mail', null);
-            this.trigger('loggedout')
+            this.trigger('loggedout', name)
           }
         }.bind(this) });
       }
@@ -202,11 +203,14 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       template_view: _.template( $("#template_view").html() ),
       template_edit: _.template( $("#template_edit").html() ),
       render: function() {
+        var edit = user.get('name')==this.model.get('user');
         var template = this.template_view;
-        if (user.get('name')==this.model.get('user')) {
+        if (edit) {
           template = this.template_edit;
         }
         $(this.el).html( template( this.model.toJSON() ) );
+        if (edit) {
+        }
 
         var att = this.model.get('_attachments');
         function get_fname(name) {
@@ -267,6 +271,12 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           model: model,
           el: $('<div></div>')
         });
+        user.on('loggedin loggedout', function(name) {
+          if (name==model.get('user')) {
+            user.off('loggedin loggedout', null, this);
+            showYesornoPage(model.get('_id'));
+          }
+        }, this);
         coll.on('remove', function() {
           console.log('collection remove event');
           var empty=$('<div data-role="page"></div>');
