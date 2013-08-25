@@ -11,11 +11,11 @@
     <!-- TODO: move templates into separate file (?) -->
     <script type="text/template" id="template_view">
       <div class="yon_container">
-        <h1 class="yon_question"><%=question%></h1>
+        <h1 class="yon_big"><%=question%></h1>
         <% if (answer==true) { %>
-          <h1 class="yon_answer"><%=answer_true%></h1>
+          <h1 class="yon_small"><%=answer_true%></h1>
         <% } else { %>
-          <h1 class="yon_answer"><%=answer_false%></h1>
+          <h1 class="yon_small"><%=answer_false%></h1>
         <% } %>
         <div class="yon_lastchange">Last changed: <%=mtime%></div>
       </div>
