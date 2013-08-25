@@ -46,10 +46,15 @@ input.yon_box {
   color: #000014;
 }
 
+input[type="text"].yon_box {
+  width: 100%;
+}
+
 .yon_left_big {
   width: 38%;
   padding-right: 2%;
   text-align: right;
+  vertical-align: top;
 }
 
 .yon_mid_big {
@@ -71,6 +76,7 @@ input.yon_box {
   width: 56%;
   padding-right: 2%;
   text-align: right;
+  vertical-align: top;
 }
 
 .yon_mid_small {
