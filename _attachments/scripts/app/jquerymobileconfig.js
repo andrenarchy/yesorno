@@ -4,6 +4,7 @@ define(["jquery"], function($) {
     $.mobile.hashListeningEnabled = false;
     //$.mobile.autoInitializePage = false;
     //$.mobile.defaultPageTransition = "none";
+    $.mobile.ignoreContentEnabled = true;
     
     // Remove page from DOM when hidden
     $('body').on('pagehide', 'div[data-role="page"]', function (event, ui) {

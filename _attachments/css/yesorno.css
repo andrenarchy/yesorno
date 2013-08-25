@@ -20,7 +20,6 @@ div[data-role="page"] {
   margin-top: 70px;
   background-color: #000014;
   text-align: right;
-  opacity: 0.65;
   color: white;
   font-size: 50px;
   padding-left:5%;
@@ -28,36 +27,76 @@ div[data-role="page"] {
   margin-left:40%;
 }
 
-.yon_box {
+.yon_boxcont {
   margin-top: 70px;
-  background-color: #000014;
-  text-align: right;
   opacity: 0.65;
-  color: white;
-  padding-left:5%;
-  padding-right:5%;
-  margin-left:40%;
+  font-size: 0;
 }
 
-h1 {
+.yon_boxcont > * {
+  display: inline-block;
   font-size: 50px;
   font-weight: bold;
 }
 
-.yon_box_small {
-  margin-left: 70%;
+.yon_box {
+  background-color: #000014;
+  text-align: right;
+  color: white;
+}
+
+.yon_left_big {
+  width: 38%;
+  padding-right: 2%;
+  text-align: right;
+}
+
+.yon_mid_big {
+  width: 45%;
+  text-align: right;
+  padding-right: 10%;
+  padding-left: 5%;
+}
+
+.yon_left_small {
+  width: 56%;
+  padding-right: 2%;
+  text-align: right;
+}
+
+.yon_mid_small {
+  padding-left:2%;
+  width: 30%;
+  text-align: right;
+  padding-right: 10%;
+}
+
+.yon_right {
+  position: absolute;
+  margin-left: -10%;
+  padding-left: 2%;
+  width: 8%;
+  float: right;
+}
+
+input.yon_box {
+  font-size: 50px;
+  font-weight: bold;
+  border: none;
+  background-color: white;
+  color: #000014;
+}
+
+.ui-btn {
+  margin: 0;
+}
+
+.yon_boxcont_small {
+  margin-left: 60%;
 }
 
 .yon_left {
   float: left;
-}
-
-.yon_answer_edit .yon_box_small {
-  padding-left: 0.2em;
-}
-
-.yon_answer{
-  margin-left: 70%;
 }
 
 #popup_login, #popup_register {

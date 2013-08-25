@@ -23,17 +23,39 @@
 
     <script type="text/template" id="template_edit">
       <div class="yon_container">
-        <h1 class="yon_question"><%=question%></h1>
-        <div class="yon_answer_edit">
-          <div class="yon_box yon_box_small">
-            <a href="#" data-role="button" data-inline="true" class="yon_left">Yes</a>
-            <h1><%=answer_true%></h1>
-          </div>
-          <div class="yon_box yon_box_small">
-            <a href="#" data-role="button" data-inline="true" data-icon="check" data-theme="b" class="yon_left">No</a>
-            <h1><%=answer_false%></h1>
+
+        <div class="yon_boxcont">
+          <div class="yon_left_big"></div>
+          <div class="yon_mid_big yon_box"><%=question%></div>
+          <div class="yon_right">
+            <a data-role="button" data-inline="true" data-icon="edit" data-theme="b">Edit</a>
           </div>
         </div>
+
+        <div class="yon_boxcont">
+          <div class="yon_left_small">
+            <a data-role="button" data-inline="true">Yes</a>
+          </div>
+          <div class="yon_mid_small yon_box">
+            <%=answer_true%>
+          </div>
+          <div class="yon_right">
+            <a data-role="button" data-inline="true" data-icon="edit" data-theme="b">Edit</a>
+          </div>
+        </div>
+
+        <div class="yon_boxcont">
+          <div class="yon_left_small">
+            <a data-role="button" data-inline="true" data-icon="check" data-theme="b">No</a>
+          </div>
+          <div class="yon_mid_small yon_box">
+            <input class="yon_box" type="text" value="<%=answer_false%>" data-enhance="false">
+          </div>
+          <div class="yon_right">
+            <a data-role="button" data-inline="true" data-icon="check" data-theme="b">Save</a>
+          </div>
+        </div>
+
       </div>
     </script>
 
