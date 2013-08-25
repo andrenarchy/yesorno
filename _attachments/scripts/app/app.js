@@ -193,6 +193,17 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       }
     });
 
+    // view for editable text
+    var TextView = Backbone.View.extend({
+      initialize: function() {
+      },
+      template_text_view: _.template( $("#template_text_view").html() ),
+      template_text_edit: _.template( $("#template_text_edit").html() ),
+      render: function() {
+      }
+    });
+
+
     var YesornoView = Backbone.View.extend({
       initialize: function() {
         this.listenTo(this.model, {
@@ -210,6 +221,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         }
         $(this.el).html( template( this.model.toJSON() ) );
         if (edit) {
+
         }
 
         var att = this.model.get('_attachments');

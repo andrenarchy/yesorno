@@ -11,52 +11,60 @@
     <!-- TODO: move templates into separate file (?) -->
     <script type="text/template" id="template_view">
       <div class="yon_container">
-        <h1 class="yon_big"><%=question%></h1>
+        <h1 class="yon_row yon_box yon_big"><%=question%></h1>
         <% if (answer==true) { %>
-          <h1 class="yon_small"><%=answer_true%></h1>
+          <h1 class="yon_row yon_box yon_small"><%=answer_true%></h1>
         <% } else { %>
-          <h1 class="yon_small"><%=answer_false%></h1>
+          <h1 class="yon_row yon_box yon_small"><%=answer_false%></h1>
         <% } %>
-        <div class="yon_lastchange">Last changed: <%=mtime%></div>
+        <div class="yon_row yon_lastchange">Last changed: <%=mtime%></div>
       </div>
     </script>
 
     <script type="text/template" id="template_edit">
       <div class="yon_container">
 
-        <div class="yon_boxcont">
-          <div class="yon_left_big"></div>
-          <div class="yon_mid_big yon_box"><%=question%></div>
+        <div class="yon_row">
           <div class="yon_right">
             <a data-role="button" data-inline="true" data-icon="edit" data-theme="b">Edit</a>
           </div>
+          <div class="yon_box yon_big"><%=question%></div>
         </div>
 
-        <div class="yon_boxcont">
-          <div class="yon_left_small">
+        <div class="yon_row">
+          <div class="yon_small_left">
             <a data-role="button" data-inline="true">Yes</a>
           </div>
-          <div class="yon_mid_small yon_box">
-            <%=answer_true%>
-          </div>
-          <div class="yon_right">
-            <a data-role="button" data-inline="true" data-icon="edit" data-theme="b">Edit</a>
+          <div>
+            <div class="yon_right">
+              <a data-role="button" data-inline="true" data-icon="edit" data-theme="b">Edit</a>
+            </div>
+            <div class="yon_box yon_small">
+              <%=answer_true%>
+            </div>
           </div>
         </div>
 
-        <div class="yon_boxcont">
-          <div class="yon_left_small">
+        <div class="yon_row">
+          <div class="yon_small_left">
             <a data-role="button" data-inline="true" data-icon="check" data-theme="b">No</a>
           </div>
-          <div class="yon_mid_small yon_box">
-            <input class="yon_box" type="text" value="<%=answer_false%>" data-enhance="false">
-          </div>
-          <div class="yon_right">
-            <a data-role="button" data-inline="true" data-icon="check" data-theme="b">Save</a>
+          <div>
+            <div class="yon_right">
+              <a data-role="button" data-inline="true" data-icon="check" data-theme="b">Save</a>
+            </div>
+            <div class="yon_box yon_small">
+              <input class="yon_box" type="text" value="<%=answer_false%>" data-enhance="false">
+            </div>
           </div>
         </div>
 
       </div>
+    </script>
+
+    <script type="text/template" id="template_text_view">
+    </script>
+    <script type="text/template" id="template_text_edit">
     </script>
 
     <script type="text/template" id="template_loggedin">

@@ -11,99 +11,68 @@ div[data-role="page"] {
 }
 
 .yon_loggedin, .yon_loggedout {
-  padding-right: 5%;
+  padding-right: 10%;
   padding-left: 5%;
   text-align: right;
 }
 
-.yon_boxcont {
-  font-size: 0;
-}
-
-.yon_boxcont > * {
-  display: inline-block;
-}
-
-h1, .yon_boxcont > *, .yon_big, .yon_small, input.yon_box {
+h1, .yon_big, .yon_small, .yon_big_left, .yon_small_left, .yon_right, input.yon_box {
   font-size: 50px;
   font-weight: bold;
 }
 
-.yon_boxcont, .yon_big, .yon_small {
+.yon_row {
   margin-top: 70px;
   opacity: 0.65;
+  text-align: right;
 }
 
-.yon_box, .yon_big, .yon_small {
-  text-align: right;
+.yon_box {
   background-color: #000014;
   color: white;
 }
 
-input.yon_box {
+input[type="text"].yon_box {
+  width: 100%;
   border: none;
   background-color: white;
   color: #000014;
-}
-
-input[type="text"].yon_box {
-  width: 100%;
-}
-
-.yon_left_big {
-  width: 38%;
-  padding-right: 2%;
-  text-align: right;
-  vertical-align: top;
-}
-
-.yon_mid_big {
-  padding-left: 5%;
-  width: 45%;
-  padding-right: 10%;
   text-align: right;
 }
 
 .yon_big {
-  /* from yon_mid_big */
   margin-left: 40%;
   padding-left: 5%;
   padding-right: 10%;
-  text-align: right;
 }
 
-.yon_left_small {
-  width: 56%;
+.yon_big_left {
+  position: absolute;
+  width: 38%;
   padding-right: 2%;
-  text-align: right;
-  vertical-align: top;
-}
-
-.yon_mid_small {
-  padding-left:2%;
-  width: 30%;
-  padding-right: 10%;
-  text-align: right;
 }
 
 .yon_small {
-  /* from yon_mid_small */
   margin-left: 58%;
-  padding-left:2%;
+  padding-left: 2%;
   padding-right: 10%;
-  text-align: right;
+}
+
+.yon_small_left {
+  position: absolute;
+  width: 56%;
+  padding-right: 2%;
 }
 
 .yon_right {
   position: absolute;
-  margin-left: -10%;
+  right: 0;
   padding-left: 2%;
   width: 8%;
-  float: right;
+  text-align: left;
 }
 
-
-.yon_boxcont .ui-btn {
+.yon_row .ui-btn {
   margin: 0;
 }
 
