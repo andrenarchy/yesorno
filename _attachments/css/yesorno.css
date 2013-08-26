@@ -91,5 +91,6 @@ input[type="text"].yon_box {
 }
 
 .yon_lastchange {
+  font-size: 1em;
   text-align: right;
 }

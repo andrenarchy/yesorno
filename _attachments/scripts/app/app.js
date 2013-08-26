@@ -14,28 +14,11 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 
     var MnemeRouter = Backbone.Router.extend({
       initialize: function() {
-        this.firstPage = false;
-        $.mobile.initializePage();
       },
       routes: {
         "": showHomePage,
-        ":id": showYesornoPage
+        ":id": showYesorno
       },
-      changePage: function(page) {
-        console.log('change page');
-
-        // prepare page
-        $(page.el).attr('data-role', 'page');
-        page.render();
-        $('body').append($(page.el));
-        $(page.el).trigger('create');
-
-        // make transition / actually change page
-        var transition = this.firstPage ? "none" : $.mobile.defaultPageTransition;
-        this.firstPage = false;
-        $.mobile.initializePage();
-        $.mobile.changePage($(page.el), { transition: transition, changeHash: false });
-      }
     });
 
     var CouchUser = Backbone.Model.extend({
@@ -196,34 +179,42 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     // view for editable text
     var TextView = Backbone.View.extend({
       initialize: function() {
+        console.log('text init');
+        this.mode = user.get('name')==this.model.get('user') ? 'editable' : 'view';
+        this.property = this.options.property;
+        this.classes = this.options.classes ? this.options.classes : 'yon_small';
+        this.listenTo(this.model, 'change:'+this.property, this.render);
+        this.render();
       },
-      template_text_view: _.template( $("#template_text_view").html() ),
-      template_text_edit: _.template( $("#template_text_edit").html() ),
+      templates: {
+        editable: _.template( $("#template_text_editable").html() ),
+        edit: _.template( $("#template_text_editable").html() )
+      },
       render: function() {
+        $(this.el).html( this.templates[this.mode]({
+          text: this.model.get(this.property),
+          classes: this.classes
+        }) ).trigger('create');
+        if (this.mode=='edit') {
+          //$(this.el).find('input').
+        } else {
+          console.log($(this.el).find('#text'));
+        }
+        return this;
       }
     });
 
-
     var YesornoView = Backbone.View.extend({
       initialize: function() {
-        this.listenTo(this.model, {
-          'change': this.render,
-          //'destroy': this.remove
-        });
+        this.listenTo(this.model, 'change:_attachments', this.render_attachments);
+        this.render_attachments();
+        this.render();
       },
-      template_view: _.template( $("#template_view").html() ),
-      template_edit: _.template( $("#template_edit").html() ),
+      template: _.template( $("#template_view").html() ),
       render: function() {
-        var edit = user.get('name')==this.model.get('user');
-        var template = this.template_view;
-        if (edit) {
-          template = this.template_edit;
-        }
-        $(this.el).html( template( this.model.toJSON() ) );
-        if (edit) {
-
-        }
-
+        $(this.el).html( this.template( this.model.toJSON() ) );
+      },
+      render_attachments: function() {
         var att = this.model.get('_attachments');
         function get_fname(name) {
           var extensions = ['png', 'jpg'];
@@ -238,82 +229,89 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           }
           return null;
         }
-
         var bgimage_fname = get_fname(this.model.get('answer') ? 'true' : 'false');
         if (bgimage_fname) {
-          $(this.el).first().css('background-image', 'url(/yesorno/'+this.model.get('_id')+'/'+bgimage_fname+')');
+          $.mobile.activePage.css('background-image', 'url(/yesorno/'+this.model.get('_id')+'/'+bgimage_fname+')');
         }
+      }
+      });
 
-        var userviewdiv = $('<div></div>').prependTo($(this.el));
-        var userview = new CouchUserView({
-          model: user,
-          el: userviewdiv
+    // view for yesorno page
+    var YesornoEditView = Backbone.View.extend({
+      initialize: function() {
+        /*this.listenTo(this.model, {
+          'change': this.render,
+          //'destroy': this.remove
+        });*/
+
+        $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
+          model: this.model,
+          property: 'question',
+          classes: 'yon_big'
+        }).$el) );
+        
+        $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
+          model: this.model,
+          property: 'answer',
+          classes: 'yon_big'
+        }).$el) );
+      },
+      render: function() {
+
+      },
+    });
+
+    var YesornoCollView = Backbone.View.extend({
+      initialize: function() {
+        this.views = [];
+        this.collection.on('add remove', this.render, this);
+      },
+      render: function() {
+        console.log('coll render')
+        this.destroyViews();
+        console.log(this.collection);
+        if (this.collection.length) {
+          this.collection.each( function(model) {
+            var view =  new YesornoView({model: model});
+            this.views.push(view);
+            $(this.el).append(view.$el);
+          }, this);
+        } else {
+          $(this.el).append('No model in collection!');
+        }
+      },
+      destroyViews: function() {
+        _.each(this.views, function(view) {
+          view.remove();
         });
+        this.views = [];
+        $(this.el).empty();
       }
     });
 
-    var router = new MnemeRouter();
-
     function showHomePage() {
-      showYesornoPage('istemmaschonda');
+      showYesorno('istemmaschonda');
     }
 
-    function showLoading(id) {
-      // show a fancy 'loading' message while fetching data
-      $.mobile.loading( 'show', {
-        text: 'Fetching '+id+'...',
-        textVisible: true
-      });
-    }
-
-    function showNoDoc(id){
-      // show a fancy 'loading' message while fetching data
-      $.mobile.loading( 'show', {
-        text: 'No '+id+' document. Waiting for it...',
-        textVisible: true
-      });
-    }
-
-    function showYesornoPage(id) {
+    var yesornocoll_view = null;
+    function showYesorno(id) {
+      console.log('show yesorno: '+id);
       var coll = new YesornoCollection(id);
-      coll.on('add', function(model) {
-        console.log('collection add event');
-        // change page to fresh view associated with model 'yesorno'
-        var yesorno_view = new YesornoView({
-          model: model,
-          el: $('<div></div>')
-        });
-        user.on('loggedin loggedout', function(name) {
-          if (name==model.get('user')) {
-            user.off('loggedin loggedout', null, this);
-            showYesornoPage(model.get('_id'));
-          }
-        }, this);
-        coll.on('remove', function() {
-          console.log('collection remove event');
-          var empty=$('<div data-role="page"></div>');
-          $('body').append(empty);
-          $.mobile.changePage(empty, { transition: 'fade', changeHash: false });
-          showNoDoc(id);
-
-          console.log('change to ', empty);
-          //yesorno_view.remove();
-        });
-        router.changePage(yesorno_view);
-
+      if (yesornocoll_view) {
+        yesornocoll_view.remove();
+      }
+      yesornocoll_view = new YesornoCollView({
+        collection: coll
       });
-      showLoading(id);
-
-      // go for the data
-      coll.fetch({
-        success: function() {
-          if (!coll.length) {
-            showNoDoc(id);
-          }
-        }
-      });
+      $.mobile.activePage.append(yesornocoll_view.$el);
+      coll.fetch();
     }
 
-    Backbone.history.start();
+    $(document).ready(function(){
+      $.mobile.activePage.append( new CouchUserView({model: user}).$el );
+
+      var router = new MnemeRouter();
+      Backbone.history.start();
+    });
   }
 );
