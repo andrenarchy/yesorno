@@ -206,8 +206,10 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 
     var YesornoView = Backbone.View.extend({
       initialize: function() {
-        this.listenTo(this.model, 'change:_attachments', this.render_attachments);
+        this.listenTo(this.model, 'change:_attachments change:answer', this.render_attachments);
         this.render_attachments();
+        
+        this.listenTo(this.model, 'change', this.render);
         this.render();
       },
       template: _.template( $("#template_view").html() ),
