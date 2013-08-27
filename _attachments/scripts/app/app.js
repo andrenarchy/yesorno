@@ -177,7 +177,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     });
 
     function set_background(model) {
-      console.log(model);
       var att = model.get('_attachments');
       function get_fname(name) {
         var extensions = ['png', 'jpg'];
@@ -212,14 +211,11 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       render: function() {
         $(this.el).html( this.template( this.model.toJSON() ) );
       },
-      render_attachments: function() {
-      }
     });
 
     // view for editable text
     var TextView = Backbone.View.extend({
       initialize: function() {
-        console.log('text init');
         this.edit = false;
         this.attr = this.options.attr;
         this.classes = this.options.classes ? this.options.classes : 'yon_small';
@@ -240,12 +236,39 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           text: this.model.get(this.attr),
           classes: this.classes
         }) ).trigger('create');
-        if (this.mode=='edit') {
-          //$(this.el).find('input').
+        if (this.edit) {
+          $(this.el).find('#save').on('click', this.edit_end.bind(this));
+          $(this.el).find('input').on('focusout', this.edit_end.bind(this));
+          $(this.el).find('input').on('keydown', function(e) {
+            if (e.keyCode == 27) { // escape
+              this.edit = false;
+              this.render();
+            } else if (e.keyCode == 13) { //enter
+              this.edit_end();
+            }
+          }.bind(this));
         } else {
-          console.log($(this.el).find('#text'));
+          $(this.el).find('#text, #edit').on('click', this.edit_start.bind(this));
         }
         return this;
+      },
+      edit_start: function() {
+        if (this.edit) {
+          console.log('warning: edit already active for ' + this.attr);
+        }
+        this.edit = true;
+        this.render();
+        $(this.el).find('input').focus().val(this.model.get(this.attr));
+      },
+      edit_end: function() {
+        if (!this.edit) {
+          console.log('warning: edit already finished for ' + this.attr);
+        }
+        this.edit = false;
+        this.model.set(this.attr, $(this.el).find('input').val());
+        this.model.urlRoot = '/' + couchDbName;
+        this.model.save();
+        this.render();
       }
     });
 
@@ -266,13 +289,13 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
           model: this.model,
           attr: 'answer_true',
-          classes: 'yon_big'
+          classes: 'yon_small'
         }).$el) );
 
         $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
           model: this.model,
           attr: 'answer_false',
-          classes: 'yon_big'
+          classes: 'yon_small'
         }).$el) );
       },
       render: function() {
@@ -296,9 +319,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         this.listenTo(user, 'loggedin loggedout', this.render);
       },
       render: function() {
-        console.log('coll render')
         this.destroyViews();
-        console.log(this.collection);
         if (this.collection.length) {
           this.collection.each( function(model) {
             var viewclass = model.get('user')==user.get('name') ? YesornoEditView : YesornoView;

@@ -20,7 +20,7 @@
 
     <script type="text/template" id="template_text_view">
       <div class="yon_right">
-        <a data-role="button" data-inline="true" data-icon="edit" data-theme="b">Edit</a>
+        <a id="edit" data-role="button" data-inline="true" data-icon="edit" data-theme="b">Edit</a>
       </div>
       <div id="text" class="yon_box <%=classes%>">
         <%=text%>
@@ -29,7 +29,7 @@
 
     <script type="text/template" id="template_text_edit">
       <div class="yon_right">
-        <a data-role="button" data-inline="true" data-icon="check" data-theme="b">Save</a>
+        <a id="save" data-role="button" data-inline="true" data-icon="check" data-theme="b">Save</a>
       </div>
       <div class="yon_box yon_small">
         <input class="yon_box" type="text" value="<%=text%>" data-enhance="false">
