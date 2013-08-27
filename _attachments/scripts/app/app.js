@@ -308,7 +308,10 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           }, this);
         } else {
           // TODO: yesorno anlegen?
-          $(this.el).append('No model in collection!');
+					var view =  new NoYesornoView({model: model});
+					this.views.push(view);
+					$(this.el).append(view.$el).trigger('create');
+          //$(this.el).append('No model in collection!');
         }
       },
       destroyViews: function() {
