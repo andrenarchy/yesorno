@@ -167,6 +167,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     // connector is based on collections :/
     var YesornoCollection = Backbone.Collection.extend({
       initialize: function(id) {
+        this.id = id;
         this.db = {
           view: 'by_id',
           keys: [id],
@@ -306,7 +307,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 		//view for request of nonexistent yesorno
     var NoYesornoView = Backbone.View.extend({
 
-      template: _.template( $("template_redirect_nonexistent").html() ),
+      template: _.template( $("#template_redirect_nonexistent").html() ),
       render: function() {
         $(this.el).html( this.template( this.model.toJSON() ) );
       },
@@ -329,7 +330,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           }, this);
         } else {
           // TODO: yesorno anlegen?
-					var view =  new NoYesornoView({model: model});
+					var view =  new NoYesornoView({id: this.collection.id});
 					this.views.push(view);
 					$(this.el).append(view.$el).trigger('create');
           //$(this.el).append('No model in collection!');
