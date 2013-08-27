@@ -176,23 +176,68 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       }
     });
 
+    function set_background(model) {
+      console.log(model);
+      var att = model.get('_attachments');
+      function get_fname(name) {
+        var extensions = ['png', 'jpg'];
+        if (!att) {
+          return null;
+        }
+        for (var i=0, ext; ext=extensions[i++];) {
+          var fname = name + '.' + ext;
+          if (fname in att && att[fname].length<1e6) {
+            return fname;
+          }
+        }
+        return null;
+      }
+      var bgimage_fname = get_fname(model.get('answer') ? 'true' : 'false');
+      if (bgimage_fname) {
+        $.mobile.activePage.css('background-image', 'url(/yesorno/'+model.get('_id')+'/'+bgimage_fname+')');
+      } else {
+        $.mobile.activePage.css('background-image', '');
+      }
+    }
+
+    var YesornoView = Backbone.View.extend({
+      initialize: function() {
+        this.listenTo(this.model, 'change:_attachments change:answer', function () { set_background(this.model) });
+        set_background(this.model);
+
+        this.listenTo(this.model, 'change', this.render);
+        this.render();
+      },
+      template: _.template( $("#template_view").html() ),
+      render: function() {
+        $(this.el).html( this.template( this.model.toJSON() ) );
+      },
+      render_attachments: function() {
+      }
+    });
+
     // view for editable text
     var TextView = Backbone.View.extend({
       initialize: function() {
         console.log('text init');
-        this.mode = user.get('name')==this.model.get('user') ? 'editable' : 'view';
-        this.property = this.options.property;
+        this.edit = false;
+        this.attr = this.options.attr;
         this.classes = this.options.classes ? this.options.classes : 'yon_small';
-        this.listenTo(this.model, 'change:'+this.property, this.render);
+
+        this.listenTo(this.model, 'change:_attachments change:answer', function () { set_background(this.model) });
+        set_background(this.model);
+
+        this.listenTo(this.model, 'change:'+this.attr, this.render);
         this.render();
       },
       templates: {
-        editable: _.template( $("#template_text_editable").html() ),
-        edit: _.template( $("#template_text_editable").html() )
+        view: _.template( $("#template_text_view").html() ),
+        edit: _.template( $("#template_text_edit").html() )
       },
       render: function() {
-        $(this.el).html( this.templates[this.mode]({
-          text: this.model.get(this.property),
+        var template = this.edit ? 'edit' : 'view';
+        $(this.el).html( this.templates[template]({
+          text: this.model.get(this.attr),
           classes: this.classes
         }) ).trigger('create');
         if (this.mode=='edit') {
@@ -203,43 +248,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         return this;
       }
     });
-
-    var YesornoView = Backbone.View.extend({
-      initialize: function() {
-        this.listenTo(this.model, 'change:_attachments change:answer', this.render_attachments);
-        this.render_attachments();
-        
-        this.listenTo(this.model, 'change', this.render);
-        this.render();
-      },
-      template: _.template( $("#template_view").html() ),
-      render: function() {
-        $(this.el).html( this.template( this.model.toJSON() ) );
-      },
-      render_attachments: function() {
-        var att = this.model.get('_attachments');
-        function get_fname(name) {
-          var extensions = ['png', 'jpg'];
-          if (!att) {
-            return null;
-          }
-          for (var i=0, ext; ext=extensions[i++];) {
-            var fname = name + '.' + ext;
-            if (fname in att && att[fname].length<1e6) {
-              return fname;
-            }
-          }
-          return null;
-        }
-        var bgimage_fname = get_fname(this.model.get('answer') ? 'true' : 'false');
-        if (bgimage_fname) {
-          $.mobile.activePage.css('background-image', 'url(/yesorno/'+this.model.get('_id')+'/'+bgimage_fname+')');
-        } else {
-          $.mobile.activePage.css('background-image', '');
-        }
-      }
-      });
-
     // view for yesorno page
     var YesornoEditView = Backbone.View.extend({
       initialize: function() {
@@ -250,13 +258,19 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 
         $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
           model: this.model,
-          property: 'question',
+          attr: 'question',
           classes: 'yon_big'
-        }).$el) );
+        }).$el) ).trigger('create');
         
         $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
           model: this.model,
-          property: 'answer',
+          attr: 'answer_true',
+          classes: 'yon_big'
+        }).$el) );
+
+        $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
+          model: this.model,
+          attr: 'answer_false',
           classes: 'yon_big'
         }).$el) );
       },
@@ -280,7 +294,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
             var viewclass = model.get('user')==user.get('name') ? YesornoEditView : YesornoView;
             var view =  new viewclass({model: model});
             this.views.push(view);
-            $(this.el).append(view.$el);
+            $(this.el).append(view.$el).trigger('create');
           }, this);
         } else {
           // TODO: yesorno anlegen?
@@ -310,12 +324,12 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       yesornocoll_view = new YesornoCollView({
         collection: coll
       });
-      $.mobile.activePage.append(yesornocoll_view.$el);
+      $.mobile.activePage.append(yesornocoll_view.$el).trigger('create');
       coll.fetch();
     }
 
     $(document).ready(function(){
-      $.mobile.activePage.append( new CouchUserView({model: user}).$el );
+      $.mobile.activePage.append( new CouchUserView({model: user}).$el ).trigger('create');
 
       var router = new MnemeRouter();
       Backbone.history.start();
