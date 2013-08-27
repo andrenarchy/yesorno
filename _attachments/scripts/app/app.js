@@ -234,6 +234,8 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         var bgimage_fname = get_fname(this.model.get('answer') ? 'true' : 'false');
         if (bgimage_fname) {
           $.mobile.activePage.css('background-image', 'url(/yesorno/'+this.model.get('_id')+'/'+bgimage_fname+')');
+        } else {
+          $.mobile.activePage.css('background-image', '');
         }
       }
       });
@@ -267,6 +269,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       initialize: function() {
         this.views = [];
         this.collection.on('add remove', this.render, this);
+        this.listenTo(user, 'loggedin loggedout', this.render);
       },
       render: function() {
         console.log('coll render')
@@ -274,11 +277,13 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         console.log(this.collection);
         if (this.collection.length) {
           this.collection.each( function(model) {
-            var view =  new YesornoView({model: model});
+            var viewclass = model.get('user')==user.get('name') ? YesornoEditView : YesornoView;
+            var view =  new viewclass({model: model});
             this.views.push(view);
             $(this.el).append(view.$el);
           }, this);
         } else {
+          // TODO: yesorno anlegen?
           $(this.el).append('No model in collection!');
         }
       },
