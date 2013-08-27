@@ -248,6 +248,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         return this;
       }
     });
+
     // view for yesorno page
     var YesornoEditView = Backbone.View.extend({
       initialize: function() {
@@ -276,6 +277,15 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       },
       render: function() {
 
+      },
+    });
+
+		//view for request of nonexistent yesorno
+    var NoYesornoView = Backbone.View.extend({
+
+      template: _.template( $("template_redirect_nonexistent").html() ),
+      render: function() {
+        $(this.el).html( this.template( this.model.toJSON() ) );
       },
     });
 
