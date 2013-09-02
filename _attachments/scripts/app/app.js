@@ -92,6 +92,15 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         var name = this.model.get('name');
         if (name) {
           $(this.el).html(this.template_loggedin(this.model.toJSON()));
+          var menu = $(this.el).find('#user_menu').hide();
+          var visible = false;
+          $(this.el).find('#btn_user').on('click', function() {
+            visible = !visible;
+            $(this).buttonMarkup({
+              icon: 'arrow-'+ ( visible ? 'u' : 'd' )
+            });
+            menu.slideToggle();
+          });
           $(this.el).find('#btn_logout').on('click', function() {
             $(this.el).find('#btn_logout').button('disable');
             this.model.logout();

@@ -38,7 +38,17 @@
 
     <script type="text/template" id="template_loggedin">
       <div class="yon_loggedin">
-        Logged in as <strong><%=name%></strong>. <button id="btn_logout" data-icon="arrow-r" data-theme="b" data-inline="true">Logout</button>
+        <button id="btn_user" data-icon="arrow-d" data-theme="a" data-inline="true"><%=name%></button>
+        <div id="user_menu" class="yon_usermenu">
+          <button id="btn_new" data-icon="plus" data-corners="false" data-theme="b">Create a new YesOrNo...</button>
+          <div id="user_yesornos">
+            <ul data-role="listview" data-theme="a" data-icon="false">
+              <li><a href="#istemmaschonda">istemmaschonda</a></li>
+              <li><a href="#istschloeminochimsuess">istschloeminochimsuess</a></li>
+            </ul>
+          </div>
+          <button id="btn_logout" data-icon="alert" data-corners="false" data-theme="a">Logout</button>
+        </div>
       </div>
     </script>
 
