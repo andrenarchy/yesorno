@@ -41,8 +41,8 @@
         <button id="btn_user" data-icon="arrow-d" data-theme="a" data-inline="true"><%=name%></button>
         <div id="user_menu" class="yon_usermenu">
           <button id="btn_new" data-icon="plus" data-corners="false" data-theme="b">Create a new YesOrNo...</button>
-          <div id="user_yesornos">
-            <ul data-role="listview" data-theme="a" data-icon="false">
+          <div>
+            <ul id="user_yesornos" data-role="listview" data-theme="a" data-icon="false">
               <li><a href="#istemmaschonda">istemmaschonda</a></li>
               <li><a href="#istschloeminochimsuess">istschloeminochimsuess</a></li>
             </ul>
@@ -50,6 +50,10 @@
           <button id="btn_logout" data-icon="alert" data-corners="false" data-theme="a">Logout</button>
         </div>
       </div>
+    </script>
+
+    <script type="text/template" id="template_user_yesornos">
+      <li><a href="#<%=_id%>"><%=_id%></a></li>
     </script>
 
     <script type="text/template" id="template_loggedout">

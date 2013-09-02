@@ -94,6 +94,12 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           $(this.el).html(this.template_loggedin(this.model.toJSON()));
           var menu = $(this.el).find('#user_menu').hide();
           var visible = false;
+          var user_yesornos_coll = new YesornoUserCollection(name);
+          user_yesornos_coll.fetch();
+          var user_yesornos_view = new YesornoUserCollView({
+            collection: user_yesornos_coll,
+            el: $(this.el).find('#user_yesornos')
+          });
           $(this.el).find('#btn_user').on('click', function() {
             visible = !visible;
             $(this).buttonMarkup({
@@ -175,6 +181,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     // want to handle one Model at a time but the Backbone-couchdb
     // connector is based on collections :/
     var YesornoCollection = Backbone.Collection.extend({
+      model: Yesorno,
       initialize: function(id) {
         this.id = id;
         this.db = {
@@ -184,6 +191,39 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         };
         Backbone.Collection.prototype.initialize.call(this, arguments);
       }
+    });
+
+    var YesornoUserCollection = Backbone.Collection.extend({
+      model: Yesorno,
+      comparator: function(model) { return model.get('_id') },
+      initialize: function(user) {
+        this.user = user;
+        this.db = {
+          view: 'by_user',
+          keys: [user],
+          filter : Backbone.couch_connector.config.ddoc_name + "/by_user"
+        };
+        Backbone.Collection.prototype.initialize.call(this, arguments);
+      }
+    });
+
+    var YesornoUserCollView = Backbone.View.extend({
+      initialize: function() {
+        console.log(this.collection)
+        this.listenTo(this.collection, 'add remove', this.render);
+        $(this.el).trigger('create');
+        this.render();
+      },
+      template: _.template( $("#template_user_yesornos").html() ),
+      render: function() {
+        $(this.el).empty();
+        this.collection.each( function(model) {
+          if (!model.isNew()) {
+            $(this.el).append( this.template( model.toJSON() ) );
+          }
+        }.bind(this));
+        $(this.el).listview().listview('refresh');
+      },
     });
 
     function set_background(model) {
