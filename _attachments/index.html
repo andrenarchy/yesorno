@@ -40,8 +40,10 @@
       <div class="yon_loggedin">
         <button id="btn_user" data-icon="arrow-d" data-theme="a" data-inline="true"><%=name%></button>
         <div id="user_menu" class="yon_usermenu">
-          <button id="btn_new" data-icon="plus" data-corners="false" data-theme="b">Create a new YesOrNo...</button>
-          <div>
+          <input type="text" name="yesorno_id" value="" placeholder="new YesOrNo handle">
+          <button id="btn_new" data-icon="plus" data-corners="false" data-theme="b">Create YesOrNo!</button>
+          <div class="yon_yesornos">
+            <p>My YesOrNos:</p>
             <ul id="user_yesornos" data-role="listview" data-theme="a" data-icon="false">
               <li><a href="#istemmaschonda">istemmaschonda</a></li>
               <li><a href="#istschloeminochimsuess">istschloeminochimsuess</a></li>

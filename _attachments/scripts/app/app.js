@@ -80,6 +80,8 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 
     var CouchUserView = Backbone.View.extend({
       initialize: function() {
+        this.menu_visible = false;
+        this.menu_view = null;
         this.listenTo(this.model, {
           'loggedin': this.render,
           'loggedout': this.render
@@ -88,25 +90,51 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       },
       template_loggedin: _.template($('#template_loggedin').html()),
       template_loggedout: $('#template_loggedout').html(),
+      toggle_menu: function () {
+        this.menu_visible = !this.menu_visible;
+        $(this.el).find('#btn_user').buttonMarkup({
+          icon: 'arrow-'+ ( this.menu_visible ? 'u' : 'd' )
+        });
+        $(this.el).find('#user_menu').slideToggle();
+      },
       render: function() {
+        if (this.menu_view) {
+          this.menu_view.remove();
+        }
         var name = this.model.get('name');
         if (name) {
           $(this.el).html(this.template_loggedin(this.model.toJSON()));
-          var menu = $(this.el).find('#user_menu').hide();
-          var visible = false;
+
+          // init menu
+          $(this.el).find('#user_menu').hide();
+
+          var input_new = $(this.el).find('input[name=yesorno_id]');
+          var btn_new = $(this.el).find('#btn_new');
+          btn_new.on('click', function() {
+            var new_id = input_new.val();
+            var new_yesorno = new Yesorno({
+              _id: new_id,
+              user: name
+            });
+            new_yesorno.save(null, {
+              success: function(){
+                this.toggle_menu();
+                router.navigate(new_id, { trigger: true });
+              }.bind(this),
+              error: function(){
+                console.log('TODO: err');
+              }
+            });
+          }.bind(this));
+
           var user_yesornos_coll = new YesornoUserCollection(name);
           user_yesornos_coll.fetch();
-          var user_yesornos_view = new YesornoUserCollView({
+          this.menu_view = new YesornoUserCollView({
             collection: user_yesornos_coll,
             el: $(this.el).find('#user_yesornos')
           });
-          $(this.el).find('#btn_user').on('click', function() {
-            visible = !visible;
-            $(this).buttonMarkup({
-              icon: 'arrow-'+ ( visible ? 'u' : 'd' )
-            });
-            menu.slideToggle();
-          });
+
+          $(this.el).find('#btn_user').on('click', this.toggle_menu.bind(this));
           $(this.el).find('#btn_logout').on('click', function() {
             $(this.el).find('#btn_logout').button('disable');
             this.model.logout();
@@ -167,6 +195,16 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     });
 
     var Yesorno = Backbone.Model.extend({
+      defaults: {
+        type: 'yesorno',
+        question: 'Question?',
+        answer: true,
+        answer_true: 'Yes!',
+        answer_false: 'No!',
+        ctime: (new Date()).toISOString(),
+        mtime: (new Date()).toISOString()
+      },
+      urlRoot: '/' + couchDbName,
       // validate() should check the same fields as validate_doc_update()
       // in the CouchDB design document
       validate: function(attributes) {
@@ -209,9 +247,7 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
 
     var YesornoUserCollView = Backbone.View.extend({
       initialize: function() {
-        console.log(this.collection)
         this.listenTo(this.collection, 'add remove', this.render);
-        $(this.el).trigger('create');
         this.render();
       },
       template: _.template( $("#template_user_yesornos").html() ),
@@ -372,10 +408,12 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         this.destroyViews();
         if (this.collection.length) {
           this.collection.each( function(model) {
-            var viewclass = model.get('user')==user.get('name') ? YesornoEditView : YesornoView;
-            var view =  new viewclass({model: model});
-            this.views.push(view);
-            $(this.el).append(view.$el).trigger('create');
+            if (!model.isNew()) {
+              var viewclass = model.get('user')==user.get('name') ? YesornoEditView : YesornoView;
+              var view =  new viewclass({model: model});
+              this.views.push(view);
+              $(this.el).append(view.$el).trigger('create');
+            }
           }, this);
         } else {
           // TODO: yesorno anlegen?
@@ -412,10 +450,10 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
       coll.fetch();
     }
 
+    var router = new MnemeRouter();
     $(document).ready(function(){
       $.mobile.activePage.append( new CouchUserView({model: user}).$el ).trigger('create');
 
-      var router = new MnemeRouter();
       Backbone.history.start();
     });
   }

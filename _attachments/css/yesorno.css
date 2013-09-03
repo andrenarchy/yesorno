@@ -34,8 +34,19 @@ div[data-role="page"] {
   text-align: center;
 }
 
-.yon_usermenu > *:first-child {
-  margin: 0;
+.yon_usermenu .ui-input-text {
+  margin-top: 0;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.yon_usermenu .yon_yesornos {
+  margin-top: 2em;
+}
+
+.yon_yesornos p {
+  text-align: center;
+  margin-bottom: 0.5em;
 }
 
 .yon_usermenu > *:last-child {
