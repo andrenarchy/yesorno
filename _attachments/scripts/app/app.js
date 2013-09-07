@@ -361,10 +361,10 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
     // view for yesorno page
     var YesornoEditView = Backbone.View.extend({
       initialize: function() {
-        /*this.listenTo(this.model, {
-          'change': this.render,
+        this.listenTo(this.model, {
+          'change:answer': this.render,
           //'destroy': this.remove
-        });*/
+        });
 
         $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
           model: this.model,
@@ -372,20 +372,38 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           classes: 'yon_big'
         }).$el) ).trigger('create');
         
-        $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
+        var answer=this.model.get('answer');
+        $(this.el).append( $('<div class="yon_row"></div>').append(
+          this.template({
+            answer: 'true',
+            text: 'Yes',
+            checked: answer
+          })
+        ).append(new TextView({
           model: this.model,
           attr: 'answer_true',
           classes: 'yon_small'
         }).$el) );
 
-        $(this.el).append( $('<div class="yon_row"></div>').append(new TextView({
+        console.log((!answer) ? 'true' : 'false');
+        $(this.el).append( $('<div class="yon_row"></div>').append(
+          this.template({
+            answer: 'false',
+            text: 'No',
+            checked: !answer
+          })
+        ).append(new TextView({
           model: this.model,
           attr: 'answer_false',
           classes: 'yon_small'
         }).$el) );
+        this.render();
       },
+      template: _.template( $("#template_radio_question").html() ),
       render: function() {
-
+        var answer=this.model.get('answer');
+        $('#radio_question_'+ (answer ? 'true' : 'false')).prop('checked', 'true');
+        $('input[name=radio_question]').checkboxradio('refresh');
       },
     });
 

@@ -114,6 +114,12 @@ input[type="text"].yon_box {
   margin: 0;
 }
 
+.yon_small_left .ui-radio {
+  display: inline-block;
+  vertical-align: middle;
+  min-width: 2.5em;
+}
+
 #popup_login, #popup_register {
   opacity: 0.93;
   background: #eeeeee;

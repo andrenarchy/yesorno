@@ -36,6 +36,17 @@
       </div>
     </script>
 
+    <script type="text/template" id="template_radio_question">
+      <div class="yon_small_left">
+        <input type="radio" name="radio_question" id="radio_question_<%=answer%>" value="<%=answer%>"<%
+        if (checked) {
+          %> checked="true"<%
+        }
+        %>>
+        <label for="radio_question_<%=answer%>"><%=text%></label>
+      </div>
+    </script>
+
     <script type="text/template" id="template_loggedin">
       <div class="yon_loggedin">
         <button id="btn_user" data-icon="arrow-d" data-theme="a" data-inline="true"><%=name%></button>
