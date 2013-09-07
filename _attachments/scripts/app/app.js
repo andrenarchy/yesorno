@@ -352,7 +352,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
         }
         this.edit = false;
         this.model.set(this.attr, $(this.el).find('input').val());
-        this.model.urlRoot = '/' + couchDbName;
         this.model.save();
         this.render();
       }
@@ -385,7 +384,6 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           classes: 'yon_small'
         }).$el) );
 
-        console.log((!answer) ? 'true' : 'false');
         $(this.el).append( $('<div class="yon_row"></div>').append(
           this.template({
             answer: 'false',
@@ -397,6 +395,11 @@ define(["jquery", "underscore", "backbone", "backbonecouch", "jquerymobile"],
           attr: 'answer_false',
           classes: 'yon_small'
         }).$el) );
+        $(this.el).find('input[name=radio_question]').on('change', function(e) {
+          var new_answer = $('input[name=radio_question]:checked').val()=='true' ? true : false;
+          this.model.set('answer', new_answer);
+          this.model.save();
+        }.bind(this));
         this.render();
       },
       template: _.template( $("#template_radio_question").html() ),
