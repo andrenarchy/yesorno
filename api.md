@@ -29,7 +29,7 @@ default installation's ```APIURL``` is ```http://yesorno.it/```
 ### Create
 Issue a `PUT` request to `_yesorno/ID`. curl example:
 ```
-curl -X POST APIURL/_yesorno/istemmaschonda -d '{
+curl -X PUT APIURL/_yesorno/istemmaschonda -d '{
   "type": "yesorno",
   ...
 }
