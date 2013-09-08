@@ -34,6 +34,9 @@ curl -X PUT APIURL/_yesorno/istemmaschonda -d '{
   ...
 }
 ```
+Creating a document is only allowed when logged in and when session data is
+provided. Otherwise the new document cannot be associated with a user
+account.
 
 ### Read
 Issue a `GET` request to `_yesorno/ID`. curl example:
@@ -53,6 +56,8 @@ curl -X PUT APIURL/_yesorno/istemmaschonda -d {
   ...
 }
 ```
+Updating a document is only allowed by the user who created it and thus
+session data has to be provided.
 
 ### Delete
 Issue a `DELETE` request to `_yesorno/ID?rev=REV`. curl example:
